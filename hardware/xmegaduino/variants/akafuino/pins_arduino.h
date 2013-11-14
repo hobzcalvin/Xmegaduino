@@ -27,6 +27,7 @@
 #include <avr/pgmspace.h>
 
 #define USE_RTC // Use RTC for millis etc.
+#define RESET_BUTTON
 
 #define REPEAT8(x) x, x, x, x, x, x, x, x
 #define BV0TO7 _BV(0), _BV(1), _BV(2), _BV(3), _BV(4), _BV(5), _BV(6), _BV(7)
@@ -112,8 +113,8 @@ const uint8_t PROGMEM digital_pin_to_port_PGM[] = {
 };
 
 const uint8_t PROGMEM digital_pin_to_bit_mask_PGM[] = {
-		// PIN IN PORT		
-		// -------------------------------------------		
+		// PIN IN PORT
+		// -------------------------------------------
 		_BV( 2 ), // 0
 		_BV( 3 ),
 		_BV( 0 ),
@@ -145,36 +146,36 @@ const uint8_t PROGMEM digital_pin_to_bit_mask_PGM[] = {
 };
 
 const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
-	// TIMERS		
-	// -------------------------------------------		
+	// TIMERS
+	// -------------------------------------------
 	TIMER_C0C	, // 0
-	TIMER_C0D	, 
-	TIMER_C0A	, 
-	TIMER_C0B	, 
-	TIMER_D0C	, 
-	TIMER_D0D	, 
-	TIMER_D1A	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
+	TIMER_C0D	,
+	TIMER_C0A	,
+	TIMER_C0B	,
+	TIMER_D0C	,
+	TIMER_D0D	,
+	TIMER_D1A	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
 	TIMER_C1A	, // 8
-	TIMER_C1B	, 
-	TIMER_D1B	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
+	TIMER_C1B	,
+	TIMER_D1B	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
 	TIMER_E0A	, // 14
-	TIMER_E0B	, 
-	TIMER_E0C	, 
-	TIMER_E0D	, 
-	TIMER_D0A	, 
-	TIMER_D0B	, 
-	NOT_ON_TIMER	, 
+	TIMER_E0B	,
+	TIMER_E0C	,
+	TIMER_E0D	,
+	TIMER_D0A	,
+	TIMER_D0B	,
+	NOT_ON_TIMER	,
 	NOT_ON_TIMER	, // 21
 	NOT_ON_TIMER	, // A0
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
 };
 
 const TC0_t* PROGMEM timer_to_tc0_PGM[] = {

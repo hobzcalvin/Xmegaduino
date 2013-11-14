@@ -26,6 +26,8 @@
 
 #include <avr/pgmspace.h>
 
+#define RESET_BUTTON
+
 #define REPEAT8(x) x, x, x, x, x, x, x, x
 #define BV0TO7 _BV(0), _BV(1), _BV(2), _BV(3), _BV(4), _BV(5), _BV(6), _BV(7)
 #define BV7TO0 _BV(7), _BV(6), _BV(5), _BV(4), _BV(3), _BV(2), _BV(1), _BV(0)
@@ -141,25 +143,25 @@ const uint8_t PROGMEM digital_pin_to_bit_mask_PGM[] = {
 };
 
 const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
-	NOT_ON_TIMER	, 
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
+	NOT_ON_TIMER	,
 	NOT_ON_TIMER	,
 };
 
@@ -254,7 +256,7 @@ const uint8_t PROGMEM adc_to_channel_PGM[] = {
     6,
     7,
     8,
-    9,  
+    9,
     10,
     11,
     12,

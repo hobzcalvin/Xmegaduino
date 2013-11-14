@@ -50,7 +50,7 @@ volatile unsigned long rtc_millis = 0;
 
 /*! \brief RTC overflow interrupt service routine.
  *
- *  This ISR keeps track of the milliseconds 
+ *  This ISR keeps track of the milliseconds
  */
 ISR(RTC_OVF_vect)
 {
@@ -60,9 +60,9 @@ ISR(RTC_OVF_vect)
 unsigned long millis()
 {
  	unsigned long m;
- 	
+
  	uint8_t oldSREG = SREG;
- 
+
 	// disable interrupts while we read rtc_millis or we might get an
 	// inconsistent value (e.g. in the middle of a write to rtc_millis)
 	cli();
@@ -217,11 +217,13 @@ void delayMicroseconds(unsigned int us)
 void delay(unsigned long ms)
 {
 	unsigned long start = millis();
-	
+
 	while (millis() - start <= ms);
 }
 
+#ifdef RESET_BUTTON
 static void initResetButton();
+#endif
 static void initAdc();
 #if defined(ADCACAL0) || defined(ADCBCAL0)
 static uint8_t ReadCalibrationByte(uint8_t index);
@@ -232,7 +234,7 @@ void init()
 	// this needs to be called before setup() or some functions won't
 	// work there
 	sei();
-	
+
         // TODO: micros/millis timer init.
 
         // TODO: pwm init
@@ -247,7 +249,7 @@ void init()
 	// here so they can be used as normal digital i/o; they will be
 	// reconnected in Serial.begin()
 	// TODO: Disconnect bootloader USARTS
-	
+
         /**************************************/
         /* Init system clock: run it at 32Mhz */
 
@@ -270,7 +272,7 @@ void init()
 	do {
 		/* Wait for the 32kHz oscillator to stabilize. */
 	} while ( ( OSC.STATUS & OSC_RC32KRDY_bm ) == 0);
-		
+
 
 	/* Set internal 32kHz oscillator as clock source for RTC. */
 	CLK.RTCCTRL = CLK_RTCSRC_RCOSC_gc | CLK_RTCEN_bm;//1kHz
@@ -305,7 +307,7 @@ void init()
 #endif
         /*************************************/
         /* Init I/O ports */
-	
+
 #define TOTEMPOLE      0x00  // Totempole
 #define PULLDOWN       0x10  // Pull down
 #define PULLUP         0x18  // Pull up
@@ -314,7 +316,7 @@ void init()
 #define OUT_PULL_CONFIG TOTEMPOLE
 //#define OUT_PULL_CONFIG BUSKEEPER
 //#define OUT_PULL_CONFIG WIRED_AND_PULL
-	
+
 	//configure pins of xmega
 
 	PORTCFG.MPCMASK = 0xFF; //do this for all pins of the following command
@@ -330,15 +332,15 @@ void init()
 	PORTCFG.MPCMASK = 0xFF; //do this for all pins of the following command
 	PORTB.PIN0CTRL  = PULLDOWN;
 	PORTB.DIR       = 0;
-#if defined(ADCB) 
-#if defined(ADCBCAL0) 
+#if defined(ADCB)
+#if defined(ADCBCAL0)
 // TODO: Linux avr-gcc doesn't seem to declare CAL[LH]
         ADCB.CALL       = ReadCalibrationByte( offsetof(NVM_PROD_SIGNATURES_t, ADCBCAL0) );
         ADCB.CALH       = ReadCalibrationByte( offsetof(NVM_PROD_SIGNATURES_t, ADCBCAL1) );
 #endif // ADCBCAL0
         initAdc(&ADCB);
 #endif // ADCB
-	
+
 	PORTCFG.MPCMASK = 0xFF; //do this for all pins of the following command
 	PORTC.PIN0CTRL  = OUT_PULL_CONFIG;
 
@@ -348,7 +350,7 @@ void init()
 	PORTCFG.MPCMASK = 0xFF; //do this for all pins of the following command
 	PORTE.PIN0CTRL  = OUT_PULL_CONFIG;
 
-#if defined(PORTF) 
+#if defined(PORTF)
 	PORTCFG.MPCMASK = 0xFF; //do this for all pins of the following command
 	PORTF.PIN0CTRL  = PULLUP;
 #endif
@@ -357,24 +359,26 @@ void init()
 	do {
 		/* Wait until RTC is not busy. */
 	} while (  RTC.STATUS & RTC_SYNCBUSY_bm );
-	
+
 	/* Configure RTC period to 1 millisecond. */
 	RTC.PER = 0;//1ms
 	RTC.CNT = 0;
 	RTC.COMP = 0;
 	RTC.CTRL = ( RTC.CTRL & ~RTC_PRESCALER_gm ) | RTC_PRESCALER_DIV1_gc;
 
-	/* Enable overflow interrupt. */	
+	/* Enable overflow interrupt. */
 	RTC.INTCTRL = ( RTC.INTCTRL & ~( RTC_COMPINTLVL_gm | RTC_OVFINTLVL_gm ) ) |
 	              RTC_OVFINTLVL_LO_gc |
 	              RTC_COMPINTLVL_OFF_gc;
 #endif
 
+#ifdef RESET_BUTTON
         /*************************************/
         /* Enable reset button               */
         initResetButton();
 
         /*************************************/
+#endif
 	/* Enable interrupts.                */
 	PMIC.CTRL |= PMIC_LOLVLEN_bm | PMIC_MEDLVLEN_bm | PMIC_HILVLEN_bm;
 	sei();
@@ -421,7 +425,7 @@ static void initAdc( ADC_t* adc ) {
                          ;
 
         adc->CH0.INTFLAGS = 1; // Strangely enough, clears IF
-	
+
         // Do CTRLA last so everything is initialized before we enable.
         adc->CTRLA   = 0 << ADC_DMASEL_gp   // DMA off
                      | 0 << ADC_CH0START_bp // don't start ADC
@@ -441,8 +445,7 @@ static uint8_t ReadCalibrationByte(uint8_t index)
 }
 #endif // ADCACAL0 || ADCBCAL0
 
-// TODO: Do this only for xplain board.
-
+#ifdef RESET_BUTTON
 static const byte resetPin = 31;
 
 static void resetRupt() {
@@ -457,3 +460,4 @@ static void resetRupt() {
 static void initResetButton() {
     attachInterrupt( resetPin, resetRupt, FALLING );
 }
+#endif
