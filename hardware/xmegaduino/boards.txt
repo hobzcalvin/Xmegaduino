@@ -232,3 +232,13 @@ akafuino.bootloader.file=akafuino-boot.hex
 akafuino.bootloader.fuse2=0xBF
 #akafuino.bootloader.fuse4=0xFE
 akafuino.bootloader.fuse5=0xFD
+
+##############################################################
+
+amaretv1.name=Amaret LED Wearable V1
+
+amaretv1.build.mcu=atxmega16a4
+amaretv1.build.f_cpu=32000000L
+amaretv1.build.core=xmega
+amaretv1.build.variant=amaretv1
+
